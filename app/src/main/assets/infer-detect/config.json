@@ -1,0 +1,21 @@
+{
+    "product": "EasyDL", 
+    "channelOrder": "CHW", 
+    "means": [
+        104, 
+        117, 
+        124
+    ], 
+    "labels": [
+        "[default]", 
+        "logo_v2"
+    ], 
+    "mid": 1626, 
+    "height": 300, 
+    "param_file_asset_path": "infer-detect/params.enc", 
+    "width": 300, 
+    "scale": 1.0, 
+    "model_file_asset_path": "infer-detect/model", 
+    "rid": 6418, 
+    "colorFormat": "RGB"
+}

@@ -1,0 +1,1 @@
+-keep class com.lianxi.dingtu.newsnfc.app.GlobalConfiguration

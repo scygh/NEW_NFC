@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title" />
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/submit_baidu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_nor_down_red"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="提交识别"
+            android:textColor="@color/white"
+            android:textSize="44px" />
+
+        <Button
+            android:id="@+id/submit_1001"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_nor_down_red"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="菜品测试1"
+            android:textColor="@color/white"
+            android:textSize="44px" />
+
+        <Button
+            android:id="@+id/submit_6672"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_nor_down_red"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="菜品测试2"
+            android:textColor="@color/white"
+            android:textSize="44px" />
+
+    </LinearLayout>
+
+</LinearLayout>

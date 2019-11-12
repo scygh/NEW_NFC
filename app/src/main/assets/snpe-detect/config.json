@@ -1,0 +1,26 @@
+{
+    "autocheck_qcom": true, 
+    "product": "EasyDL", 
+    "channelOrder": "HWC", 
+    "means": [
+        104, 
+        117, 
+        124
+    ], 
+    "labels": [
+        "[default]", 
+        "logo_v2"
+    ], 
+    "mid": 1626, 
+    "height": 300, 
+    "snpe_runtimes_order": [
+        1, 
+        3, 
+        0
+    ], 
+    "width": 300, 
+    "scale": 1.0, 
+    "model_file_asset_path": "snpe-detect/params.enc", 
+    "rid": 6418, 
+    "colorFormat": "RGB"
+}
