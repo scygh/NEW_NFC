@@ -63,20 +63,32 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 public class RefundActivity extends NfcJellyBeanActivity<RefundPresenter> implements RefundContract.View {
-    @BindView(R.id.root) LinearLayout root;
-    @BindView(R.id.name) TextView name;
-    @BindView(R.id.number) TextView number;
-    @BindView(R.id.balance) TextView balance;
-    @BindView(R.id.donate) TextView donate;
-    @BindView(R.id.subsidies) TextView subsidies;
-    @BindView(R.id.cardview) CardView cardview;
-    @BindView(R.id.submit) Button submit;
-    @BindView(R.id.label_rl) LabelRelativeLayout labelRelativeLayout;
+    @BindView(R.id.root)
+    LinearLayout root;
+    @BindView(R.id.name)
+    TextView name;
+    @BindView(R.id.number)
+    TextView number;
+    @BindView(R.id.balance)
+    TextView balance;
+    @BindView(R.id.donate)
+    TextView donate;
+    @BindView(R.id.subsidies)
+    TextView subsidies;
+    @BindView(R.id.cardview)
+    CardView cardview;
+    @BindView(R.id.submit)
+    Button submit;
+    @BindView(R.id.label_rl)
+    LabelRelativeLayout labelRelativeLayout;
     LoadDialog loadDialog;
     CardInfoBean mCardInfoBean;
-    @BindView(R.id.et_amount) EditText etAmount;
-    @BindView(R.id.et_donate) EditText etDonate;
-    @BindView(R.id.et_money) EditText etMoney;
+    @BindView(R.id.et_amount)
+    EditText etAmount;
+    @BindView(R.id.et_donate)
+    EditText etDonate;
+    @BindView(R.id.et_money)
+    EditText etMoney;
     CardInfoTo mCardInfoTo;
 
     @Override
@@ -117,7 +129,7 @@ public class RefundActivity extends NfcJellyBeanActivity<RefundPresenter> implem
 
             @Override
             public void afterTextChanged(Editable s) {
-               etMoney.setText(s.toString());
+                etMoney.setText(s.toString());
 
             }
         });
@@ -126,7 +138,7 @@ public class RefundActivity extends NfcJellyBeanActivity<RefundPresenter> implem
         submit.setText("请先刷卡，启用按钮");
     }
 
-    private void setupWindowAnimations(){
+    private void setupWindowAnimations() {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.translate_left_to_center);   //得到一个LayoutAnimationController对象；
         LayoutAnimationController controller = new LayoutAnimationController(animation);   //设置控件显示的顺序；
         controller.setOrder(LayoutAnimationController.ORDER_REVERSE);   //设置控件显示间隔时间；
@@ -195,7 +207,8 @@ public class RefundActivity extends NfcJellyBeanActivity<RefundPresenter> implem
 
     }
 
-    @Override public void onCardInfo(CardInfoTo cardInfoTo) {
+    @Override
+    public void onCardInfo(CardInfoTo cardInfoTo) {
         mCardInfoTo = cardInfoTo;
         name.setText(cardInfoTo.getName());
         number.setText("NO." + cardInfoTo.getSerialNo());
@@ -209,7 +222,7 @@ public class RefundActivity extends NfcJellyBeanActivity<RefundPresenter> implem
         donate.setText(String.format("%.2f", cardInfoTo.getDonate()));
         subsidies.setText(String.format("%.2f", cardInfoTo.getSubsidy()));
 
-        String value ;
+        String value;
         switch (cardInfoTo.getUserState()) {
             case 0:
                 value = "未开户";
@@ -248,9 +261,14 @@ public class RefundActivity extends NfcJellyBeanActivity<RefundPresenter> implem
                 });
     }
 
-    @OnClick(R.id.submit) public void onViewClicked() {
+    @OnClick(R.id.submit)
+    public void onViewClicked() {
         if (util.check()) return;
-        if (Double.parseDouble(etAmount.getText().toString())>=mCardInfoTo.getCash()){
+        if (TextUtils.isEmpty(etAmount.getText().toString())) {
+            Toasty.warning(RefundActivity.this,"现金不能为0",Toast.LENGTH_SHORT, true).show();
+            return;
+        }
+        if (Double.parseDouble(etAmount.getText().toString()) >= mCardInfoTo.getCash()) {
             Toasty.warning(RefundActivity.this, "退款金额不能大于余额", Toast.LENGTH_SHORT, true).show();
             return;
         }

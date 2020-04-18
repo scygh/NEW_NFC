@@ -63,14 +63,21 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 public class StepThreeActivity extends BaseActivity<StepThreePresenter> implements StepThreeContract.View {
-    @BindView(R.id.root) LinearLayout root;
-    @BindView(R.id.step_view) StepView stepView;
-    @BindView(R.id.number) EditText number;
-    @BindView(R.id.password) EditText password;
-    @BindView(R.id.ll_mima) LinearLayout llMima;
-    @BindView(R.id.deadline) TextView deadline;
+    @BindView(R.id.root)
+    LinearLayout root;
+    @BindView(R.id.step_view)
+    StepView stepView;
+    @BindView(R.id.number)
+    EditText number;
+    @BindView(R.id.password)
+    EditText password;
+    @BindView(R.id.ll_mima)
+    LinearLayout llMima;
+    @BindView(R.id.deadline)
+    TextView deadline;
     private OptionsPickerView pvCustomOptions;
-    @BindView(R.id.department) TextView department;
+    @BindView(R.id.department)
+    TextView department;
     RegisterParam param;
     private TimePickerView pvTime;
 
@@ -202,9 +209,10 @@ public class StepThreeActivity extends BaseActivity<StepThreePresenter> implemen
         finish();
     }
 
-    @Override public void onDepartment(List<DepartmentTo> list) {
+    @Override
+    public void onDepartment(List<DepartmentTo> list) {
         department.setText(list.get(0).getName());
-        param.setDepartmentID(list.get(0).getID());
+        param.setDepartmentID(list.get(0).getId());
         param.setDepartmentName(list.get(0).getName());
         /**
          * @description
@@ -219,7 +227,7 @@ public class StepThreeActivity extends BaseActivity<StepThreePresenter> implemen
                 //返回的分别是三个级别的选中位置
                 String tx = list.get(options1).getPickerViewText();
                 department.setText(tx);
-                param.setDepartmentID(list.get(options1).getID());
+                param.setDepartmentID(list.get(options1).getId());
                 param.setDepartmentName(list.get(options1).getName());
             }
         })
@@ -252,7 +260,8 @@ public class StepThreeActivity extends BaseActivity<StepThreePresenter> implemen
         pvCustomOptions.setPicker(list);//添加数据
     }
 
-    @Override public void onRegister() {
+    @Override
+    public void onRegister() {
         Intent intent = new Intent();
         intent.putExtra(AppConstant.ActivityIntent.STEP3, param);
         intent.setClass(StepThreeActivity.this, ClaimActivity.class);
@@ -260,12 +269,14 @@ public class StepThreeActivity extends BaseActivity<StepThreePresenter> implemen
 
     }
 
-    @Override public void onNextNumber(int number) {
+    @Override
+    public void onNextNumber(int number) {
         param.setNumber(number);
     }
 
 
-    @OnClick({R.id.ll_time, R.id.ll_dep, R.id.submit}) public void onViewClicked(View view) {
+    @OnClick({R.id.ll_time, R.id.ll_dep, R.id.submit})
+    public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_time:
                 pvTime.show(view);
@@ -286,7 +297,7 @@ public class StepThreeActivity extends BaseActivity<StepThreePresenter> implemen
                 param.setUserCreateTime(StringUtils.ConverToString(date));
                 param.setSerialNo(number.getText().toString().trim());
                 param.setPayKey(password.getText().toString().trim());
-                Log.e(TAG, "onViewClicked: "+ JSON.toJSONString(param));
+                Log.e(TAG, "onViewClicked: " + JSON.toJSONString(param));
                 mPresenter.onRegister(param);
                 break;
         }

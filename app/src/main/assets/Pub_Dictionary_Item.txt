@@ -38,7 +38,7 @@
 "CHAR1":"用户管理"
  },{
 "ITEM_CODE":"10",
-"ITEM_NAME":"当日收益",
+"ITEM_NAME":"当前收益",
 "CHAR1":"报表中心"
  },{
 "ITEM_CODE":"11",

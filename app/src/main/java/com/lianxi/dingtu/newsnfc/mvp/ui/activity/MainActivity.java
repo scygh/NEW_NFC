@@ -15,7 +15,9 @@ import com.jess.arms.utils.ArmsUtils;
 import com.lianxi.dingtu.newsnfc.R;
 import com.lianxi.dingtu.newsnfc.app.task.MainTask;
 import com.lianxi.dingtu.newsnfc.app.task.TaskParams;
+import com.lianxi.dingtu.newsnfc.app.utils.AppConstant;
 import com.lianxi.dingtu.newsnfc.app.utils.FragmentUtils;
+import com.lianxi.dingtu.newsnfc.app.utils.SpUtils;
 import com.lianxi.dingtu.newsnfc.di.component.DaggerMainComponent;
 import com.lianxi.dingtu.newsnfc.di.module.MainModule;
 import com.lianxi.dingtu.newsnfc.mvp.contract.MainContract;
@@ -52,7 +54,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 mReplace = 0;
                 break;
             case R.id.tab_mine:
-                mReplace = 1;
+                boolean setup = (boolean) SpUtils.get(MainActivity.this, AppConstant.Api.BLOCK_SETUP, true);
+                if (setup) {
+                    mReplace = 1;
+                }
                 break;
         }
         FragmentUtils.hideAllShowFragment(mFragments.get(mReplace));
@@ -75,7 +80,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-
+        mPresenter.getRole();
         HomeFragment homeFragment;
         MineFragment mineFragment;
 
@@ -116,7 +121,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
 

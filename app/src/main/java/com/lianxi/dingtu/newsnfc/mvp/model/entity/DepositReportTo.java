@@ -28,61 +28,158 @@ public class DepositReportTo implements Serializable {
      * Description : 机器充值【线上】充值现金9元,充值赠送0元,实际现金交易9元,余额45.00元
      * Channel :
      */
-
+    /**
+     * SerialNo	string
+     * Name	string
+     * Finance	{
+     * oneOf ->
+     * EnumFinanceTypeinteger
+     * Enum:
+     * [ 0, 1, 2, 3, 4 ]
+     * }
+     * DetailType	EnumDepositDetailTypeinteger
+     * Enum:
+     * [ 1, 2, 3, 4, 5, 6 ]
+     * BeforeBalance	number($decimal)
+     * Amount	number($decimal)
+     * Money	number($decimal)
+     * Donate	number($decimal)
+     * AfterBalance	number($decimal)
+     * Cost	number($decimal)
+     * Operator	string
+     * DeviceID	integer($int32)
+     * TradeDateTime	string($date-time)
+     * Description	string
+     */
     private String SerialNo;
     private String Name;
-    private String DepartmentID;
-    private String EmpID;
-    private String IDCard;
-    private String Phone;
-    private int Number;
-    private int CardTypeID;
-    private String CardTypeName;
-    private int DetailType;
-    private int DeviceID;
     private int Finance;
+    private int DetailType;
     private double BeforeBalance;
     private double Amount;
     private double Money;
     private double Donate;
-    private double Cost;
-    private String UserID;
     private double AfterBalance;
-    private String TradeDateTime;
+    private double Cost;
     private String Operator;
+    private int DeviceID;
+    private String TradeDateTime;
     private String Description;
+
+
+    private String IDCard;
     private String Channel;
 
     public String getSerialNo() {
         return SerialNo;
     }
 
-    public void setSerialNo(String SerialNo) {
-        this.SerialNo = SerialNo;
+    public void setSerialNo(String serialNo) {
+        SerialNo = serialNo;
     }
 
     public String getName() {
         return Name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        Name = name;
     }
 
-    public String getDepartmentID() {
-        return DepartmentID;
+    public int getFinance() {
+        return Finance;
     }
 
-    public void setDepartmentID(String DepartmentID) {
-        this.DepartmentID = DepartmentID;
+    public void setFinance(int finance) {
+        Finance = finance;
     }
 
-    public String getEmpID() {
-        return EmpID;
+    public int getDetailType() {
+        return DetailType;
     }
 
-    public void setEmpID(String EmpID) {
-        this.EmpID = EmpID;
+    public void setDetailType(int detailType) {
+        DetailType = detailType;
+    }
+
+    public double getBeforeBalance() {
+        return BeforeBalance;
+    }
+
+    public void setBeforeBalance(double beforeBalance) {
+        BeforeBalance = beforeBalance;
+    }
+
+    public double getAmount() {
+        return Amount;
+    }
+
+    public void setAmount(double amount) {
+        Amount = amount;
+    }
+
+    public double getMoney() {
+        return Money;
+    }
+
+    public void setMoney(double money) {
+        Money = money;
+    }
+
+    public double getDonate() {
+        return Donate;
+    }
+
+    public void setDonate(double donate) {
+        Donate = donate;
+    }
+
+    public double getAfterBalance() {
+        return AfterBalance;
+    }
+
+    public void setAfterBalance(double afterBalance) {
+        AfterBalance = afterBalance;
+    }
+
+    public double getCost() {
+        return Cost;
+    }
+
+    public void setCost(double cost) {
+        Cost = cost;
+    }
+
+    public String getOperator() {
+        return Operator;
+    }
+
+    public void setOperator(String operator) {
+        Operator = operator;
+    }
+
+    public int getDeviceID() {
+        return DeviceID;
+    }
+
+    public void setDeviceID(int deviceID) {
+        DeviceID = deviceID;
+    }
+
+    public String getTradeDateTime() {
+        return TradeDateTime;
+    }
+
+    public void setTradeDateTime(String tradeDateTime) {
+        TradeDateTime = tradeDateTime;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
     }
 
     public String getIDCard() {
@@ -93,148 +190,11 @@ public class DepositReportTo implements Serializable {
         this.IDCard = IDCard;
     }
 
-    public String getPhone() {
-        return Phone;
-    }
-
-    public void setPhone(String Phone) {
-        this.Phone = Phone;
-    }
-
-    public int getNumber() {
-        return Number;
-    }
-
-    public void setNumber(int Number) {
-        this.Number = Number;
-    }
-
-    public int getCardTypeID() {
-        return CardTypeID;
-    }
-
-    public void setCardTypeID(int CardTypeID) {
-        this.CardTypeID = CardTypeID;
-    }
-
-    public String getCardTypeName() {
-        return CardTypeName;
-    }
-
-    public void setCardTypeName(String CardTypeName) {
-        this.CardTypeName = CardTypeName;
-    }
-
-    public int getDetailType() {
-        return DetailType;
-    }
-
-    public void setDetailType(int DetailType) {
-        this.DetailType = DetailType;
-    }
-
-    public int getDeviceID() {
-        return DeviceID;
-    }
-
-    public void setDeviceID(int DeviceID) {
-        this.DeviceID = DeviceID;
-    }
-
-    public int getFinance() {
-        return Finance;
-    }
-
-    public void setFinance(int Finance) {
-        this.Finance = Finance;
-    }
-
-    public double getBeforeBalance() {
-        return BeforeBalance;
-    }
-
-    public void setBeforeBalance(double BeforeBalance) {
-        this.BeforeBalance = BeforeBalance;
-    }
-
-    public double getAmount() {
-        return Amount;
-    }
-
-    public void setAmount(double Amount) {
-        this.Amount = Amount;
-    }
-
-    public double getMoney() {
-        return Money;
-    }
-
-    public void setMoney(double Money) {
-        this.Money = Money;
-    }
-
-    public double getDonate() {
-        return Donate;
-    }
-
-    public void setDonate(double Donate) {
-        this.Donate = Donate;
-    }
-
-    public double getCost() {
-        return Cost;
-    }
-
-    public void setCost(double Cost) {
-        this.Cost = Cost;
-    }
-
-    public String getUserID() {
-        return UserID;
-    }
-
-    public void setUserID(String UserID) {
-        this.UserID = UserID;
-    }
-
-    public double getAfterBalance() {
-        return AfterBalance;
-    }
-
-    public void setAfterBalance(double AfterBalance) {
-        this.AfterBalance = AfterBalance;
-    }
-
-    public String getTradeDateTime() {
-        return TradeDateTime;
-    }
-
-    public void setTradeDateTime(String TradeDateTime) {
-        this.TradeDateTime = TradeDateTime;
-    }
-
-    public String getOperator() {
-        return Operator;
-    }
-
-    public void setOperator(String Operator) {
-        this.Operator = Operator;
-    }
-
-    public String getDescription() {
-        return Description;
-    }
-
-    public void setDescription(String Description) {
-        this.Description = Description;
-    }
-
     public String getChannel() {
         return Channel;
     }
 
-    public void setChannel(String Channel) {
-        this.Channel = Channel;
+    public void setChannel(String channel) {
+        Channel = channel;
     }
-
 }

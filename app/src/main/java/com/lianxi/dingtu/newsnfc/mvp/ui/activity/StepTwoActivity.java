@@ -215,7 +215,7 @@ public class StepTwoActivity extends BaseActivity<StepTwoPresenter> implements S
 
     @Override public void onChoiceType(List<CardTypeTo> list) {
         type.setText(list.get(0).getName());
-        card_type = list.get(0).getID();
+        card_type = list.get(0).getId();
         days = list.get(0).getExpiryDate();
         card_state = list.get(0).getState();
         cost.setText(String.format("%.2f", list.get(0).getDefaultCost()));
@@ -231,7 +231,7 @@ public class StepTwoActivity extends BaseActivity<StepTwoPresenter> implements S
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
                 String tx = list.get(options1).getPickerViewText();
-                card_type = list.get(options1).getID();
+                card_type = list.get(options1).getId();
                 days = list.get(options1).getExpiryDate();
                 card_state = list.get(options1).getState();
                 cost.setText(String.format("%.2f", list.get(options1).getDefaultCost()));

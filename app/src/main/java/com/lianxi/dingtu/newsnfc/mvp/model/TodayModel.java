@@ -14,6 +14,7 @@ import com.lianxi.dingtu.newsnfc.mvp.contract.TodayContract;
 import com.lianxi.dingtu.newsnfc.mvp.model.api.UserService;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.AggregateTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.BaseResponse;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.MachineAmountTo;
 
 import java.util.List;
 
@@ -38,7 +39,12 @@ public class TodayModel extends BaseModel implements TodayContract.Model {
         this.mGson = null;
         this.mApplication = null;
     }
-    @Override public Observable<BaseResponse<List<AggregateTo>>> getAggregateTo(String startTime, String endTime) {
-        return mRepositoryManager.obtainRetrofitService(UserService.class).getAggregateTo(startTime, endTime);
+    @Override
+    public Observable<BaseResponse<MachineAmountTo>> getMachineAmount(int deviceId) {
+        return mRepositoryManager.obtainRetrofitService(UserService.class).getMachineAmount(deviceId);
+    }
+    @Override
+    public Observable<BaseResponse<MachineAmountTo>> getMachineTimeCount(int deviceId) {
+        return mRepositoryManager.obtainRetrofitService(UserService.class).getMachineTimeCount(deviceId);
     }
 }

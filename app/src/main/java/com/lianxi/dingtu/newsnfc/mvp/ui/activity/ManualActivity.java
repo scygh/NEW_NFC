@@ -74,13 +74,20 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 public class ManualActivity extends NfcJellyBeanActivity<ManualPresenter> implements ManualContract.View {
     LoadDialog loadDialog;
     CardInfoBean mCardInfoBean;
-    @BindView(R.id.root) LinearLayout root;
-    @BindView(R.id.name) TextView name;
-    @BindView(R.id.number) TextView number;
-    @BindView(R.id.balance) TextView balance;
-    @BindView(R.id.cost) EditText cost;
-    @BindView(R.id.btn_print) Button btnPrint;
-    @BindView(R.id.cardview) CardView cardview;
+    @BindView(R.id.root)
+    LinearLayout root;
+    @BindView(R.id.name)
+    TextView name;
+    @BindView(R.id.number)
+    TextView number;
+    @BindView(R.id.balance)
+    TextView balance;
+    @BindView(R.id.cost)
+    EditText cost;
+    @BindView(R.id.btn_print)
+    Button btnPrint;
+    @BindView(R.id.cardview)
+    CardView cardview;
     StringBuilder printer = new StringBuilder();
     private String pwd = "";
     private int payCount = 0;
@@ -188,14 +195,16 @@ public class ManualActivity extends NfcJellyBeanActivity<ManualPresenter> implem
 
     }
 
-    @OnClick(R.id.btn_print) public void onViewClicked() {
+    @OnClick(R.id.btn_print)
+    public void onViewClicked() {
         if (util.check()) return;
         btnPrint.startAnimation(new MyAnimation());
         String print = (String) SpUtils.get(ManualActivity.this, AppConstant.Print.STUB1, "");
         PrinterUtils.getInstance(ManualActivity.this).printLianxi(new StringBuilder(print));
     }
 
-    @Override public void onCardInfo(CardInfoTo cardInfoTo) {
+    @Override
+    public void onCardInfo(CardInfoTo cardInfoTo) {
         param.setNumber(cardInfoTo.getNumber());
         payCount = cardInfoTo.getPayCount();
         name.setText(cardInfoTo.getName());
@@ -223,7 +232,8 @@ public class ManualActivity extends NfcJellyBeanActivity<ManualPresenter> implem
                 });
     }
 
-    @Override public void creatSuccess(SimpleExpenseTo simpleExpenseTo) {
+    @Override
+    public void creatSuccess(SimpleExpenseTo simpleExpenseTo) {
         printer.append("\n工作模式: 手动扣款");
         printer.append("\n姓    名: " + name.getText().toString().trim());
         printer.append(String.format("\n折扣比率: %s", simpleExpenseTo.getExpenseDetail().getDiscountRate()));
@@ -257,7 +267,7 @@ public class ManualActivity extends NfcJellyBeanActivity<ManualPresenter> implem
                     }
                 });
         AudioUtils.getInstance().speakText("消费" + simpleExpenseTo.getExpenseDetail().getAmount() + "元");
-        Log.e(TAG, "creatSuccess: "+"消费" + simpleExpenseTo.getExpenseDetail().getAmount() + "元");
+        Log.e(TAG, "creatSuccess: " + "消费" + simpleExpenseTo.getExpenseDetail().getAmount() + "元");
         Toasty.success(this, "消费成功", Toast.LENGTH_SHORT, true).show();
     }
 
@@ -327,31 +337,7 @@ public class ManualActivity extends NfcJellyBeanActivity<ManualPresenter> implem
     }
 
     @Override
-    public void creatBill(String str) {
-        if (checking())
-            return;
-        if (payCount == -1) {
-            showMessage("重新放置卡片");
-            AudioUtils.getInstance().speakText("重新放置卡片");
-            return;
-        }
-        if (TextUtils.equals("1", str)) {
-            createPayDialog();
-        } else {
-            String deviceID = (String) SpUtils.get(this, AppConstant.Receipt.NO, "");
-            param.setAmount(Double.parseDouble(cost.getText().toString().trim()));
-            param.setDeviceID(Integer.valueOf(TextUtils.isEmpty(deviceID) ? "1" : deviceID));
-            param.setPayCount(payCount + 1);
-            param.setPayKey(pwd);
-            param.setPattern(1);
-            param.setDeviceType(2);
-            mPresenter.createSimpleExpense(param);
-        }
-
-
-    }
-
-    @Override public void creatBill2(boolean isOpen) {
+    public void creatBill2(boolean isOpen) {
         if (checking())
             return;
         if (payCount == -1) {
@@ -373,7 +359,8 @@ public class ManualActivity extends NfcJellyBeanActivity<ManualPresenter> implem
         }
     }
 
-    @Override public void onReadCard(ReadCardTo readCardTo) {
+    @Override
+    public void onReadCard(ReadCardTo readCardTo) {
         param.setNumber(readCardTo.getNumber());
         payCount = readCardTo.getPayCount();
         name.setText(readCardTo.getUserName());
@@ -401,7 +388,8 @@ public class ManualActivity extends NfcJellyBeanActivity<ManualPresenter> implem
                 });
     }
 
-    @Override public void onFailed() {
+    @Override
+    public void onFailed() {
         name.setText("姓名 ****");
         balance.setText("余额 0.00");
     }

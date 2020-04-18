@@ -11,6 +11,11 @@ import com.jess.arms.di.scope.ActivityScope;
 import javax.inject.Inject;
 
 import com.lianxi.dingtu.newsnfc.mvp.contract.MainContract;
+import com.lianxi.dingtu.newsnfc.mvp.model.api.UserService;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.BaseResponse;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.RoleTo;
+
+import io.reactivex.Observable;
 
 
 @ActivityScope
@@ -30,5 +35,10 @@ public class MainModel extends BaseModel implements MainContract.Model {
         super.onDestroy();
         this.mGson = null;
         this.mApplication = null;
+    }
+
+    @Override
+    public Observable<BaseResponse<RoleTo>> getRole(String userId) {
+        return mRepositoryManager.obtainRetrofitService(UserService.class).getRole(userId);
     }
 }

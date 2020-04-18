@@ -62,8 +62,8 @@ public class WarenverbrauchModel extends BaseModel implements WarenverbrauchCont
     }
 
     @Override
-    public Observable<GetEMGoods> getEmGoods() {
-        return mRepositoryManager.obtainRetrofitService(UserService.class).getEMGoods("1");
+    public Observable<GetEMGoods> getEmGoods(String state) {
+        return mRepositoryManager.obtainRetrofitService(UserService.class).getEMGoods(state);
     }
 
     @Override

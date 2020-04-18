@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/include_title" />
+
     <com.flipboard.bottomsheet.BottomSheetLayout
         android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
@@ -130,16 +132,15 @@
             android:layout_height="1dp"
             android:layout_weight="1" />
 
-        <TextView
+        <Button
             android:id="@+id/payall"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/bk_blue"
-            android:gravity="center"
             android:text="购买"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:textSize="28dp" />
 
     </LinearLayout>
 </LinearLayout>

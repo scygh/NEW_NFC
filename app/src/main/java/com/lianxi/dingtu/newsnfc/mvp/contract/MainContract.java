@@ -2,6 +2,10 @@ package com.lianxi.dingtu.newsnfc.mvp.contract;
 
 import com.jess.arms.mvp.IView;
 import com.jess.arms.mvp.IModel;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.BaseResponse;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.RoleTo;
+
+import io.reactivex.Observable;
 
 
 public interface MainContract {
@@ -12,6 +16,7 @@ public interface MainContract {
 
     //Model层定义接口,外部只需关心Model返回的数据,无需关心内部细节,即是否使用缓存
     interface Model extends IModel {
+        Observable<BaseResponse<RoleTo>> getRole(String userId);
 
     }
 }

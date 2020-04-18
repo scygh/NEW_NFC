@@ -28,14 +28,19 @@ package com.lianxi.dingtu.newsnfc.mvp.model.api;
  */
 public interface Api {
 
-    String APP_DOMAIN = "http://dev.open.api.dt128.com";
+    String APP_DOMAIN = "http://open.api.dt128.com";
+    //String APP_DOMAIN = "http://dev.open.api.dt128.com";
     int RequestSuccess = 200;
 
     String BAIDU_DOMAIN_NAME = "baidu";
     String BAIDU_DOMAIN = "https://aip.baidubce.com";
 
     String EASYDL_DOMNAIN_NAME = "easydl";
-    String EASYDL_DOMNAIN = "http://dev.open.api.dt128.com";
+    String EASYDL_DOMNAIN = "http://open.api.dt128.com";
+    //String EASYDL_DOMNAIN = "http://dev.open.api.dt128.com";
     String ReturnSuccess = "0";
+
+    String UPDATECENTER_NAME = "UpdateCenter";
+    String UPDATECENTER_DOMAIN = "http://updatecenter.dt128.com";
 
 }

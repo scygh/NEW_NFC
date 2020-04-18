@@ -17,7 +17,7 @@ public class UserInfoHelper {
     private Context mContext;
 
     private UserInfoHelper(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
         load(context);
     }
 

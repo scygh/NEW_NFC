@@ -11,6 +11,7 @@ public interface AppConstant {
 
     interface Api {
         String TOKEN = "token";
+        String USERID = "userid";
         String BAIDU_TOKEN = "baidu_token";
         String PASSWORD = "password";
         String CLIENT_ID = "client_id";
@@ -19,6 +20,9 @@ public interface AppConstant {
         //        realtimeConfidence
         String REALTIME_CONFINDENCE = "realtime_confidence";
         String LIMIT_MAX_SIZE = "limit_max_size";
+        String BLOCK_USER = "block_user";
+        String BLOCK_REPORT = "block_report";
+        String BLOCK_SETUP = "block_setup";
     }
 
     interface Receipt {

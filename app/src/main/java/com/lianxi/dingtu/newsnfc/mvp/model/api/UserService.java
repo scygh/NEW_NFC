@@ -12,6 +12,7 @@ import com.lianxi.dingtu.newsnfc.mvp.model.entity.ExpenseTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.GetDetailList;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.GetEMGoods;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.KeySwitchTo;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.MachineAmountTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.MoneyParam;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.QRDepositParam;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.QRExpenseParam;
@@ -19,9 +20,11 @@ import com.lianxi.dingtu.newsnfc.mvp.model.entity.QRExpenseTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.QRReadTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.ReadCardTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.RegisterParam;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.RoleTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.SimpleExpenseParam;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.SimpleExpenseTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.SubsidyTo;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.UpdateInfo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.UserInfoTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.VersionTo;
 
@@ -42,8 +45,6 @@ public interface UserService {
 
     @GET("Api/Token/GetToken") Call<BaseResponse<UserInfoTo>> synclogin(@Query("account") String account, @Query("password") String password, @Query("oldAccessToken") String oldAccessToken);
 
-    @GET("Api/VersionRepository/Highest") Call<BaseResponse<VersionTo>> syncUpdate(@Query("operatingSystem") String operatingSystem,@Query("type") String type,@Query("extensionName") String extensionName);
-
     @GET("Api/Config/GetCardPassword") Observable<BaseResponse<String>> getCardPassword();
 
     @GET("Api/User/GetByNumber") Observable<BaseResponse<CardInfoTo>> getByNumber(@Query("number") int number);
@@ -52,9 +53,9 @@ public interface UserService {
 
     @GET("Api/Config/GetConfig") Observable<BaseResponse<String>> getPayKeySwitch(@Query("key") String key);
 
-    @GET("Api/ReportCenter/Deposit/Paging") Observable<BaseResponse<DepositTo>> getDepositReport(@Query("pager.pageIndex") int pageIndex, @Query("pager.pageSize") int pageSize, @Query("pager.orderColumn") String orderColumn, @Query("pager.orderPattern") String orderPattern);
+    @GET("Api/ReportCenter/Deposit/Page") Observable<BaseResponse<DepositTo>> getDepositReport(@Query("PageIndex") int pageIndex, @Query("PageSize") int pageSize, @Query("deviceIDs") String deviceIDs);
 
-    @GET("Api/ReportCenter/Expense/Paging") Observable<BaseResponse<ExpenseTo>> getExpenseReport(@Query("pager.pageIndex") int pageIndex, @Query("pager.pageSize") int pageSize, @Query("pager.orderColumn") String orderColumn, @Query("pager.orderPattern") String orderPattern);
+    @GET("Api/ReportCenter/Expense/Page") Observable<BaseResponse<ExpenseTo>> getExpenseReport(@Query("PageIndex") int pageIndex, @Query("PageSize") int pageSize, @Query("deviceIDs") String deviceIDs);
 
     @GET("Api/Subsidy/SubsidyLeve/GetList") Observable<BaseResponse<List<SubsidyTo>>> getSubsidyLeve();
 
@@ -91,4 +92,11 @@ public interface UserService {
     @GET("Api/EMGoodsType/GetList") Observable<GetEMGoods> getEMGoods(@Query("state") String state);
 
     @GET("Api/EMGoods/GetPage") Observable<GetDetailList> getEMGoodsDetail(@Query ("index") Integer index,@Query ("count") Integer count,@Query ("goodsType") String goodsType);
+
+    @GET("Api/ReportCenter/Expense/MachineAmount") Observable<BaseResponse<MachineAmountTo>> getMachineAmount(@Query("deviceId")Integer deviceId);
+
+    @GET("Api/ReportCenter/Expense/MachineTimeCount") Observable<BaseResponse<MachineAmountTo>> getMachineTimeCount(@Query("deviceId")Integer deviceId);
+
+    @GET("Api/Manager/GetRole") Observable<BaseResponse<RoleTo>> getRole(@Query("userId")String userId);
+
 }

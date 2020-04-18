@@ -58,6 +58,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -112,6 +113,7 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
     private boolean isExits;
     private String pwd = "";
     private boolean canReadCard;
+    private List<SimpleExpenseParam.ListGoodsBean> listGoodsBean = new ArrayList<>();
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -163,6 +165,11 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
             contentBeans.clear();
         }
         contentBeans.addAll(detailList.getContent());
+
+        Iterator<GetDetailList.ContentBean> iterator = contentBeans.iterator();
+        while (iterator.hasNext()) {
+            iterator.next().setImgCount(0);
+        }
         // TODO: 2019/10/22 显示已选择的商品
         if (selectedBeans.size() > 0) {
             Log.d(TAG, "onEMGoodsDetailGet: asd");
@@ -190,6 +197,7 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
 
     @Override
     public void creatSuccess(SimpleExpenseTo simpleExpenseTo) {
+        alert.dismiss();
         printer = new StringBuilder();
         printer.append("\n工作模式: 商品消费");
         printer.append("\n姓    名: " + readCardTo.getUserName());
@@ -222,13 +230,13 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
                     String deviceID = (String) SpUtils.get(WarenverbrauchActivity.this, AppConstant.Receipt.NO, "");
                     param = new SimpleExpenseParam();
                     param.setNumber(mCardInfoBean.getNum());
-                    param.setAmount(Double.parseDouble(wareGoodsPrice.getText().toString().trim()));
+                    param.setAmount(goodsPrices);
                     param.setDeviceID(Integer.valueOf(TextUtils.isEmpty(deviceID) ? "1" : deviceID));
                     param.setPayCount(payCount + 1);
                     param.setPayKey(pwd);
                     param.setPattern(4);
                     param.setDeviceType(2);
-                    setGoodList();
+                    param.setListGoods(listGoodsBean);
                     mPresenter.createSimpleExpense(param);
                 }
             });
@@ -252,26 +260,28 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
     }
 
     @Override
-    public void creatBill(String str) {
-
-    }
-
-    @Override
     public void creatBill2(boolean isOpen) {
-        if (goodsPrices > 0) {
-            if (readCardTo == null) {
-                AudioUtils.getInstance().speakText("请刷卡");
-                canReadCard = true;
-                return;
-            }
-            if (isOpen) {
-                createPayDialog();
-            } else {
-                goToSimpleExpense();
-            }
-        } else {
-            Toast.makeText(this, "请先选择商品", Toast.LENGTH_SHORT).show();
+        if (payCount == -1) {
+            showMessage("重新放置卡片");
+            AudioUtils.getInstance().speakText("重新放置卡片");
+            return;
         }
+        if (isOpen) {
+            createPayDialog();
+        } else {
+            String deviceID = (String) SpUtils.get(this, AppConstant.Receipt.NO, "");
+            param = new SimpleExpenseParam();
+            param.setNumber(mCardInfoBean.getNum());
+            param.setAmount(goodsPrices);
+            param.setDeviceID(Integer.valueOf(TextUtils.isEmpty(deviceID) ? "1" : deviceID));
+            param.setPayCount(payCount + 1);
+            param.setPayKey(pwd);
+            param.setPattern(4);
+            param.setDeviceType(2);
+            param.setListGoods(listGoodsBean);
+            mPresenter.createSimpleExpense(param);
+        }
+
     }
 
     @Override
@@ -285,10 +295,12 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
         ArmsUtils.snackbarText(message);
     }
 
+    private boolean begin = false;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent != null) {
+        if (intent != null && begin) {
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             UserInfoHelper mUserInfoHelper = UserInfoHelper.getInstance(WarenverbrauchActivity.this);
             mCardInfoBean = Commands.getInstance(WarenverbrauchActivity.this).readTag(tag);
@@ -308,10 +320,10 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
                     return;
                 }
             }
-            if (canReadCard) {
-                mPresenter.readtCardInfo(company, device, mCardInfoBean.getNum());
-                canReadCard = false;
-            }
+            mPresenter.readtCardInfo(company, device, mCardInfoBean.getNum());
+            canReadCard = false;
+            begin = false;
+
         } else {
             System.out.println("intent null");
         }
@@ -321,7 +333,8 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
     @Override
     public void onReadCard(ReadCardTo readCardTo) {
         this.readCardTo = readCardTo;
-        Toast.makeText(this, "姓名：" + readCardTo.getUserName() + "\n卡号:" + readCardTo.getNumber() + "\n消费次数:" + readCardTo.getPayCount() + "\n余额:" + readCardTo.getBalance(), Toast.LENGTH_SHORT).show();
+        payCount = readCardTo.getPayCount();
+        mPresenter.getPaySgetPayKeySwitch2();
     }
 
     @Override
@@ -354,7 +367,20 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
                 }
                 break;
             case R.id.payall:
-                choicePay();
+                if (goodsPrices > 0) {
+                    choicePay();
+                    SimpleExpenseParam.ListGoodsBean listGoods;
+                    for (int i = 0; i < selectedBeans.size(); i++) {
+                        for (int j = 0; j < selectedBeans.get(i).size(); j++) {
+                            listGoods = new SimpleExpenseParam.ListGoodsBean();
+                            listGoods.setGoodsNo(selectedBeans.get(i).get(j).getGoods().getGoodsNo());
+                            listGoods.setCount(1);
+                            listGoodsBean.add(listGoods);
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "请先选择商品", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
 
@@ -374,7 +400,7 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
                                 Toast.makeText(WarenverbrauchActivity.this, "请先选择商品", Toast.LENGTH_SHORT).show();
                             }
                         } else if (i == 1) {
-                            mPresenter.getPaySgetPayKeySwitch2();
+                            goToSimpleExpense();
                         }
                     }
                 }).create();
@@ -463,20 +489,30 @@ public class WarenverbrauchActivity extends NfcJellyBeanActivity<WarenverbrauchP
         param = null;
         printer = null;
         selectedBeans.clear();
+        listGoodsBean.clear();
     }
 
+    private AlertDialog alert;
+
     private void goToSimpleExpense() {
-        String deviceID = (String) SpUtils.get(this, AppConstant.Receipt.NO, "");
-        param = new SimpleExpenseParam();
-        param.setAmount(goodsPrices);
-        param.setDeviceID(Integer.valueOf(TextUtils.isEmpty(deviceID) ? "1" : deviceID));
-        param.setPayCount(readCardTo.getPayCount() + 1);
-        param.setPayKey("scy");
-        param.setPattern(4);
-        param.setDeviceType(2);
-        param.setNumber(readCardTo.getNumber());
-        setGoodList();
-        mPresenter.createSimpleExpense(param);
+        alert = new AlertDialog.Builder(WarenverbrauchActivity.this)
+                .setTitle("刷卡支付")
+                .setIcon(R.mipmap.ic_launcher)
+                .setMessage("支付" + goodsPrices + "元").create();
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                begin = true;
+            }
+        });
+
+        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                begin = false;
+            }
+        });
+        alert.show();
     }
 
     private void initRecyclerView() {

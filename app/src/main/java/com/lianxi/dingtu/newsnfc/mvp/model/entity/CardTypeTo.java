@@ -18,7 +18,7 @@ public class CardTypeTo implements Serializable,IPickerViewData {
      * Description : 正常卡
      */
 
-    private int ID;
+    private int Id;
     private String Name;
     private int State;
     private int Foregift;
@@ -28,12 +28,12 @@ public class CardTypeTo implements Serializable,IPickerViewData {
     private int DiscountRate;
     private String Description;
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return Id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        Id = id;
     }
 
     public String getName() {

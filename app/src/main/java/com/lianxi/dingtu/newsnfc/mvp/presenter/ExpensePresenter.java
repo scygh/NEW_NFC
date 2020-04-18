@@ -14,7 +14,9 @@ import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
 
 import javax.inject.Inject;
 
+import com.lianxi.dingtu.newsnfc.app.utils.AppConstant;
 import com.lianxi.dingtu.newsnfc.app.utils.RxUtils2;
+import com.lianxi.dingtu.newsnfc.app.utils.SpUtils;
 import com.lianxi.dingtu.newsnfc.mvp.contract.ExpenseContract;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.BaseResponse;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.DepositReportTo;
@@ -51,25 +53,27 @@ public class ExpensePresenter extends BasePresenter<ExpenseContract.Model, Expen
         this.mApplication = null;
     }
 
-    public void setList(boolean isPullRefresh){
+    public void setList(boolean isPullRefresh) {
         if (isPullRefresh) index = 1;
-        mModel.getExpenseReport(index,10,"tradedatetime","desc")
-                .compose(RxUtils2.applySchedulers(mRootView,isPullRefresh))
+        String deviceID = (String) SpUtils.get(mApplication, AppConstant.Receipt.NO, "1");
+        mModel.getExpenseReport(index, 10, deviceID)
+                .compose(RxUtils2.applySchedulers(mRootView, isPullRefresh))
                 .subscribe(new Observer<BaseResponse<ExpenseTo>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
-                    @Override public void onNext(BaseResponse<ExpenseTo> expenseToBaseResponse) {
-                        if (expenseToBaseResponse.getStatusCode()!=200){
+                    @Override
+                    public void onNext(BaseResponse<ExpenseTo> expenseToBaseResponse) {
+                        if (expenseToBaseResponse.getStatusCode() != 200) {
                             mRootView.showMessage(expenseToBaseResponse.getMessage());
-                        }else {
-                            if(expenseToBaseResponse.isSuccess()){
-                                if(index==1&&expenseToBaseResponse.getContent().getRows()==null){
+                        } else {
+                            if (expenseToBaseResponse.isSuccess()) {
+                                if (index == 1 && expenseToBaseResponse.getContent().getRows() == null) {
                                     mRootView.noData();
                                 }
-                                if(expenseToBaseResponse.getContent().getRows()!=null){
+                                if (expenseToBaseResponse.getContent().getRows() != null) {
                                     mRootView.setData(expenseToBaseResponse.getContent().getRows(), isPullRefresh);
                                     index++;
                                 }

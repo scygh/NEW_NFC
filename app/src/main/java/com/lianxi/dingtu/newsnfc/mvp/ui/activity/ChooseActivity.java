@@ -30,7 +30,6 @@ public class ChooseActivity extends BaseActivity<ChoosePresenter> implements Cho
     @BindView(R.id.detail_type) TextView detailType;
     @BindView(R.id.finance) TextView finance;
     @BindView(R.id.trade_date_time) TextView tradeDateTime;
-    @BindView(R.id.card_type_name) TextView cardTypeName;
     @BindView(R.id.amount) TextView amount;
     @BindView(R.id.money) TextView money;
     @BindView(R.id.donate) TextView donate;
@@ -56,7 +55,6 @@ public class ChooseActivity extends BaseActivity<ChoosePresenter> implements Cho
         DepositReportTo reportTo = (DepositReportTo) getIntent().getSerializableExtra(AppConstant.ActivityIntent.MODEL_DEPOSIT);
         if (reportTo != null) {
             name.setText(reportTo.getName());
-            cardTypeName.setText(reportTo.getCardTypeName());
             tradeDateTime.setText("交易时间 " + reportTo.getTradeDateTime());
             afterBalance.setText(String.format("￥%.2f", reportTo.getAfterBalance()));
             amount.setText(String.format("%.2f", reportTo.getAmount()));

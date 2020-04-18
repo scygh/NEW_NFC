@@ -102,17 +102,6 @@ public class ManualPresenter extends BasePresenter<ManualContract.Model, ManualC
                 });
     }
 
-    public void getPaySgetPayKeySwitch() {
-        mModel.getPayKeySwitch("PayKeySwitch")
-                .compose(RxUtils.applySchedulers(mRootView))
-                .subscribe(new ErrorHandleSubscriber<BaseResponse<String>>(mErrorHandler) {
-                    @Override public void onNext(BaseResponse<String> booleanBaseResponse) {
-                        if (booleanBaseResponse.isSuccess())
-                            mRootView.creatBill(booleanBaseResponse.getContent());
-                    }
-                });
-    }
-
     public void getPaySgetPayKeySwitch2() {
         String _device = (String) SpUtils.get(mApplication, AppConstant.Receipt.NO, "");
         int id = Integer.valueOf(TextUtils.isEmpty(_device) ? "1" : _device);

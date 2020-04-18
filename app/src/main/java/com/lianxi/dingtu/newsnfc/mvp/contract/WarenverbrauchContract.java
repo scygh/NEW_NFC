@@ -22,8 +22,6 @@ public interface WarenverbrauchContract {
 
         void creatSuccess(SimpleExpenseTo simpleExpenseTo);
 
-        void creatBill(String str);
-
         void creatBill2(boolean isOpen);
 
         void onReadCard(ReadCardTo readCardTo);
@@ -47,7 +45,7 @@ public interface WarenverbrauchContract {
 
         Observable<BaseResponse<ReadCardTo>> addReadCard(int companyCode, int deviceID, int number);
 
-        Observable<GetEMGoods> getEmGoods();
+        Observable<GetEMGoods> getEmGoods(String state);
 
         Observable<GetDetailList> getEmGoodsdetail(int index,int pagesize,String type);
     }

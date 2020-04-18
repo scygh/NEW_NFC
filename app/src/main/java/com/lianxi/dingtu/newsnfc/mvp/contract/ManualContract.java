@@ -20,8 +20,6 @@ public interface ManualContract {
 
         void creatSuccess(SimpleExpenseTo simpleExpenseTo);
 
-        void creatBill(String str);
-
         void creatBill2(boolean isOpen);
 
         void onReadCard(ReadCardTo readCardTo);

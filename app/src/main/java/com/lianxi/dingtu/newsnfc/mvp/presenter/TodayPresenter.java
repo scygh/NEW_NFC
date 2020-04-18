@@ -2,6 +2,7 @@ package com.lianxi.dingtu.newsnfc.mvp.presenter;
 
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.di.scope.ActivityScope;
@@ -16,12 +17,18 @@ import timber.log.Timber;
 
 import javax.inject.Inject;
 
+import com.jess.arms.utils.RxLifecycleUtils;
 import com.lianxi.dingtu.newsnfc.app.event.ReplyEvent;
+import com.lianxi.dingtu.newsnfc.app.utils.AppConstant;
 import com.lianxi.dingtu.newsnfc.app.utils.RxUtils;
 import com.lianxi.dingtu.newsnfc.app.utils.RxUtils2;
+import com.lianxi.dingtu.newsnfc.app.utils.SpUtils;
 import com.lianxi.dingtu.newsnfc.mvp.contract.TodayContract;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.AggregateTo;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.BaseResponse;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.DepositTo;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.MachineAmountTo;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.UserInfoTo;
 
 import org.simple.eventbus.EventBus;
 
@@ -55,191 +62,38 @@ public class TodayPresenter extends BasePresenter<TodayContract.Model, TodayCont
         this.mImageLoader = null;
         this.mApplication = null;
     }
+    public void getMachineAmount(){
+        Integer deviceID = Integer.parseInt((String) SpUtils.get(mApplication, AppConstant.Receipt.NO, "1"));
 
-    public void setToday() {
-        Format format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        String start = format.format(c.getTime()) + " 00:00:00";
-        c.add(Calendar.DAY_OF_WEEK, 1);
-        String end = format.format(c.getTime()) + " 00:00:00";
-        Timber.wtf("时间setToday    " + start + "#" + end);
-        mModel.getAggregateTo(start, end)
-                .compose(RxUtils.applySchedulers(mRootView))
-                .subscribe(new Observer<BaseResponse<List<AggregateTo>>>() {
+        mModel.getMachineAmount(deviceID)
+                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .subscribe(new ErrorHandleSubscriber<BaseResponse<MachineAmountTo>>(mErrorHandler) {
                     @Override
-                    public void onSubscribe(Disposable d) {
+                    public void onNext(BaseResponse<MachineAmountTo> machineAmountToBaseResponse) {
+                        if (machineAmountToBaseResponse.isSuccess()){
+                            mRootView.MachineAmount(machineAmountToBaseResponse.getContent());
+                            EventBus.getDefault().post(new ReplyEvent(1));
+                            Log.e(TAG, "MachineAmount: 成功" );
 
-                    }
-
-                    @Override public void onNext(BaseResponse<List<AggregateTo>> listBaseResponse) {
-                        if (listBaseResponse.getStatusCode()!=200){
-                            mRootView.showMessage(listBaseResponse.getMessage());
-                        }else {
-                            if (listBaseResponse.isSuccess())
-                                if (listBaseResponse.getContent() != null) {
-                                    double cost = 0;
-                                    for (AggregateTo aggregateTo : listBaseResponse.getContent()) {
-                                        if (TextUtils.equals("现金消费", aggregateTo.getKey()) || TextUtils.equals("补贴消费", aggregateTo.getKey()) || TextUtils.equals("赠送消费", aggregateTo.getKey())) {
-                                            cost += Double.valueOf(aggregateTo.getValue());
-                                        }
-                                    }
-                                    mRootView.onToday(cost);
-                                    EventBus.getDefault().post(new ReplyEvent(1));
-                                }
                         }
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
                     }
                 });
     }
+    public void getMachineTimeCount(){
+        Integer deviceID = Integer.parseInt((String) SpUtils.get(mApplication, AppConstant.Receipt.NO, "1"));
 
-    public void setYesterday() {
-        Format format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_WEEK, -1);
-        String start = format.format(c.getTime()) + " 00:00:00";
-        c.add(Calendar.DAY_OF_WEEK, 1);
-        String end = format.format(c.getTime()) + " 00:00:00";
-        Timber.wtf("时间setYesterday" + start + "#" + end);
-        mModel.getAggregateTo(start, end)
-                .compose(RxUtils.applySchedulers(mRootView))
-                .subscribe(new Observer<BaseResponse<List<AggregateTo>>>() {
+        mModel.getMachineTimeCount(deviceID)
+                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .subscribe(new ErrorHandleSubscriber<BaseResponse<MachineAmountTo>>(mErrorHandler) {
                     @Override
-                    public void onSubscribe(Disposable d) {
+                    public void onNext(BaseResponse<MachineAmountTo> machineAmountToBaseResponse) {
+                        if (machineAmountToBaseResponse.isSuccess()){
+                            mRootView.MachineTimeCount(machineAmountToBaseResponse.getContent());
+                            EventBus.getDefault().post(new ReplyEvent(1));
+                            Log.e(TAG, "MachineTimeCount: 成功" );
 
-                    }
-
-                    @Override public void onNext(BaseResponse<List<AggregateTo>> listBaseResponse) {
-                        if (listBaseResponse.getStatusCode()!=200){
-                            mRootView.showMessage(listBaseResponse.getMessage());
-                        }else {
-                            if (listBaseResponse.isSuccess())
-                                if (listBaseResponse.getContent() != null) {
-                                    double cost = 0;
-                                    for (AggregateTo aggregateTo : listBaseResponse.getContent()) {
-                                        if (TextUtils.equals("现金消费", aggregateTo.getKey()) || TextUtils.equals("补贴消费", aggregateTo.getKey()) || TextUtils.equals("赠送消费", aggregateTo.getKey())) {
-                                            cost += Double.valueOf(aggregateTo.getValue());
-                                        }
-                                    }
-                                    mRootView.onYesterday(cost);
-                                    EventBus.getDefault().post(new ReplyEvent(1));
-                                }
                         }
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
                     }
                 });
     }
-
-    public void setThisMonth() {
-        Format format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        String start = format.format(c.getTime()).substring(0, 8) + "01 00:00:00";
-        c.add(Calendar.MONTH, 1);
-        String end = format.format(c.getTime()).substring(0, 8) + "01 00:00:00";
-        Timber.wtf("时间setThisMonth" + start + "#" + end);
-        mModel.getAggregateTo(start, end)
-                .compose(RxUtils.applySchedulers(mRootView))
-                .subscribe(new Observer<BaseResponse<List<AggregateTo>>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override public void onNext(BaseResponse<List<AggregateTo>> listBaseResponse) {
-                        if (listBaseResponse.getStatusCode()!=200){
-                            mRootView.showMessage(listBaseResponse.getMessage());
-                        }else {
-                            if (listBaseResponse.isSuccess())
-                                if (listBaseResponse.getContent() != null) {
-                                    double cost = 0;
-                                    for (AggregateTo aggregateTo : listBaseResponse.getContent()) {
-                                        if (TextUtils.equals("现金消费", aggregateTo.getKey()) || TextUtils.equals("补贴消费", aggregateTo.getKey()) || TextUtils.equals("赠送消费", aggregateTo.getKey())) {
-                                            cost += Double.valueOf(aggregateTo.getValue());
-                                        }
-                                    }
-                                    mRootView.onThisMonth(cost);
-                                    EventBus.getDefault().post(new ReplyEvent(1));
-                                }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    public void setLastMonth() {
-        Format format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.MONTH, -1);
-        String start = format.format(c.getTime()).substring(0, 8) + "01 00:00:00";
-        c.add(Calendar.MONTH, 1);
-        String end = format.format(c.getTime()).substring(0, 8) + "01 00:00:00";
-        Timber.wtf("时间setLastMonth" + start + "#" + end);
-        mModel.getAggregateTo(start, end)
-                .compose(RxUtils.applySchedulers(mRootView))
-                .subscribe(new Observer<BaseResponse<List<AggregateTo>>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override public void onNext(BaseResponse<List<AggregateTo>> listBaseResponse) {
-                        if (listBaseResponse.getStatusCode()!=200){
-                            mRootView.showMessage(listBaseResponse.getMessage());
-                        }else {
-                            if (listBaseResponse.isSuccess())
-                                if (listBaseResponse.getContent() != null) {
-                                    double cost = 0;
-                                    for (AggregateTo aggregateTo : listBaseResponse.getContent()) {
-                                        if (TextUtils.equals("现金消费", aggregateTo.getKey()) || TextUtils.equals("补贴消费", aggregateTo.getKey()) || TextUtils.equals("赠送消费", aggregateTo.getKey())) {
-                                            cost += Double.valueOf(aggregateTo.getValue());
-                                        }
-                                    }
-                                    mRootView.onLastMonth(cost);
-                                    EventBus.getDefault().post(new ReplyEvent(1));
-                                }
-                        }
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-
 }

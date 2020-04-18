@@ -18,9 +18,10 @@ import android.widget.Toast;
 
 import com.jess.arms.utils.ArmsUtils;
 import com.lianxi.dingtu.newsnfc.mvp.model.api.Api;
+import com.lianxi.dingtu.newsnfc.mvp.model.api.UpdateCenterService;
 import com.lianxi.dingtu.newsnfc.mvp.model.api.UserService;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.BaseResponse;
-import com.lianxi.dingtu.newsnfc.mvp.model.entity.VersionTo;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.UpdateInfo;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.FileCallback;
@@ -53,7 +54,7 @@ public class UpdateView {
     public Context mContext;
     private String downloadUrl = "";
 
-    private int newVerCode = 0; // 新版本号
+    private String newVerCode = ""; // 新版本号
     private String newVerName = "";// 新版本名称
     private boolean bShow = true;
 
@@ -67,17 +68,20 @@ public class UpdateView {
         this.bShow = isshow;
     }
 
-
     /**
      * 开始更新
      */
     public void Start() {
         if (getServerVerCode()) {
-            int vercode = UpdateConfig.getVerCode(mContext);
-            if (newVerCode > vercode) {
+            String vercode = UpdateConfig.getVerName(mContext);
+            Log.e("updateInfo", "vercode"+vercode+"newVerCode"+newVerCode);
+
+            int i =compareVersion(newVerCode,vercode);
+            if (i==1) {
                 Message newMsg = new Message();
                 newMsg.arg1 = 1;
                 dialogHhandler.sendMessage(newMsg);
+                Log.e("updateInfo", "Start: "+newMsg);
             } else {
                 if (bShow) //判断是否显示不更新对话框
                 {
@@ -89,7 +93,49 @@ public class UpdateView {
             }
         }
     }
+    /**
+     * 0代表相等，1代表version1大于version2，-1代表version1小于version2
+     * @param version1
+     * @param version2
+     * @return
+     */
+    public static int compareVersion(String version1, String version2) {
+        if (version1.equals(version2)) {
+            return 0;
+        }
+        String[] version1Array = version1.split("\\.");
+        String[] version2Array = version2.split("\\.");
+        Log.d("HomePageActivity", "version1Array=="+version1Array.length);
+        Log.d("HomePageActivity", "version2Array=="+version2Array.length);
+        int index = 0;
+        // 获取最小长度值
+        int minLen = Math.min(version1Array.length, version2Array.length);
+        int diff = 0;
+        // 循环判断每位的大小
+        Log.d("HomePageActivity", "verTag2=2222="+version1Array[index]);
+        while (index < minLen
+                && (diff = Integer.parseInt(version1Array[index])
+                - Integer.parseInt(version2Array[index])) == 0) {
+            index++;
+        }
+        if (diff == 0) {
+            // 如果位数不一致，比较多余位数
+            for (int i = index; i < version1Array.length; i++) {
+                if (Integer.parseInt(version1Array[i]) > 0) {
+                    return 1;
+                }
+            }
 
+            for (int i = index; i < version2Array.length; i++) {
+                if (Integer.parseInt(version2Array[i]) > 0) {
+                    return -1;
+                }
+            }
+            return 0;
+        } else {
+            return diff > 0 ? 1 : -1;
+        }
+    }
     Handler dialogHhandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -117,18 +163,18 @@ public class UpdateView {
         try {
 //            String verjson = getContent("http://machine_api.dt128.com/Api/VersionRepository/Highest?operatingSystem=android&type=em&extensionName=.apk");
 
-            Call<BaseResponse<VersionTo>> call = ArmsUtils.obtainAppComponentFromContext(mContext).repositoryManager().obtainRetrofitService(UserService.class).syncUpdate("android", "em", ".apk");
+            Call<UpdateInfo> call = ArmsUtils.obtainAppComponentFromContext(mContext).repositoryManager().obtainRetrofitService(UpdateCenterService.class).syncUpdate("Android_EM");
 
-            VersionTo versionTo = call.execute().body().getContent();
+            UpdateInfo.Content updateInfo = call.execute().body().getContent();
 
-            if (versionTo != null) {
+            if (updateInfo != null) {
 
                 try {
-                    newVerCode = versionTo.getHighestVersion();
-                    newVerName = versionTo.getHighestFileName();
-                    downloadUrl = versionTo.getDownloadURI();
+                    newVerCode = updateInfo.getVersion();
+                    newVerName = updateInfo.getResourceName();
+                    downloadUrl = updateInfo.getResourceUri();
                 } catch (Exception e) {
-                    newVerCode = -1;
+                    newVerCode = "";
                     newVerName = "";
                     return false;
                 }

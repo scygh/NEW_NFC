@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 显示系统窗口权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 在 屏幕最顶部显示addview -->
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <uses-feature
         android:name="android.hardware.camera.autofocus"
@@ -169,7 +169,7 @@
             android:name=".mvp.ui.activity.QRDepositActivity"
             android:launchMode="singleTask" />
         <activity android:name=".mvp.ui.activity.TodayActivity" />
-        <activity android:name=".mvp.ui.activity.WarenverbrauchActivity"/>
+        <activity android:name=".mvp.ui.activity.WarenverbrauchActivity" />
     </application>
 
 </manifest>

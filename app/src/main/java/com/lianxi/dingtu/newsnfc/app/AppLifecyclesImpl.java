@@ -42,6 +42,8 @@ import static com.lianxi.dingtu.newsnfc.mvp.model.api.Api.BAIDU_DOMAIN;
 import static com.lianxi.dingtu.newsnfc.mvp.model.api.Api.BAIDU_DOMAIN_NAME;
 import static com.lianxi.dingtu.newsnfc.mvp.model.api.Api.EASYDL_DOMNAIN;
 import static com.lianxi.dingtu.newsnfc.mvp.model.api.Api.EASYDL_DOMNAIN_NAME;
+import static com.lianxi.dingtu.newsnfc.mvp.model.api.Api.UPDATECENTER_DOMAIN;
+import static com.lianxi.dingtu.newsnfc.mvp.model.api.Api.UPDATECENTER_NAME;
 
 /**
  * ================================================
@@ -108,6 +110,7 @@ public class AppLifecyclesImpl implements AppLifecycles {
 //        UMConfigure.init(Context context, String appkey, String channel, int deviceType, String pushSecret);
         RetrofitUrlManager.getInstance().putDomain(BAIDU_DOMAIN_NAME, BAIDU_DOMAIN);
         RetrofitUrlManager.getInstance().putDomain(EASYDL_DOMNAIN_NAME, EASYDL_DOMNAIN);
+        RetrofitUrlManager.getInstance().putDomain(UPDATECENTER_NAME, UPDATECENTER_DOMAIN);
     }
 
     @Override

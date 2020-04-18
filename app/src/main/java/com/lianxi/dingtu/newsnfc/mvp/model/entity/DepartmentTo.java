@@ -14,26 +14,26 @@ public class DepartmentTo implements Serializable,IPickerViewData {
      * State : 1
      */
 
-    private String ID;
-    private String ParentID;
+    private String Id;
+    private String ParentId;
     private String Name;
     private String Description;
     private int State;
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return Id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        Id = id;
     }
 
-    public String getParentID() {
-        return ParentID;
+    public String getParentId() {
+        return ParentId;
     }
 
-    public void setParentID(String ParentID) {
-        this.ParentID = ParentID;
+    public void setParentId(String parentId) {
+        ParentId = parentId;
     }
 
     public String getName() {

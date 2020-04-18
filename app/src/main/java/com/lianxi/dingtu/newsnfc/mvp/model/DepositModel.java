@@ -41,7 +41,8 @@ public class DepositModel extends BaseModel implements DepositContract.Model {
         this.mApplication = null;
     }
 
-    @Override public Observable<BaseResponse<DepositTo>> getDepositReport(int pageIndex, int pageSize, String orderColumn, String orderPattern) {
-        return mRepositoryManager.obtainRetrofitService(UserService.class).getDepositReport(pageIndex, pageSize, orderColumn, orderPattern);
+    @Override
+    public Observable<BaseResponse<DepositTo>> getDepositReport(int pageIndex, int pageSize, String deviceIDs) {
+        return mRepositoryManager.obtainRetrofitService(UserService.class).getDepositReport(pageIndex, pageSize, deviceIDs);
     }
 }

@@ -41,7 +41,7 @@ public class ExpenseModel extends BaseModel implements ExpenseContract.Model {
         this.mApplication = null;
     }
 
-    @Override public Observable<BaseResponse<ExpenseTo>> getExpenseReport(int pageIndex, int pageSize, String orderColumn, String orderPattern) {
-        return mRepositoryManager.obtainRetrofitService(UserService.class).getExpenseReport(pageIndex, pageSize, orderColumn, orderPattern);
+    @Override public Observable<BaseResponse<ExpenseTo>> getExpenseReport(int pageIndex, int pageSize, String deviceIDs) {
+        return mRepositoryManager.obtainRetrofitService(UserService.class).getExpenseReport(pageIndex, pageSize, deviceIDs);
     }
 }

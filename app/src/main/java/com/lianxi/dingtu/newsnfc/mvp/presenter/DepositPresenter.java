@@ -15,7 +15,9 @@ import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
 
 import javax.inject.Inject;
 
+import com.lianxi.dingtu.newsnfc.app.utils.AppConstant;
 import com.lianxi.dingtu.newsnfc.app.utils.RxUtils2;
+import com.lianxi.dingtu.newsnfc.app.utils.SpUtils;
 import com.lianxi.dingtu.newsnfc.mvp.contract.DepositContract;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.BaseResponse;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.DepositReportTo;
@@ -35,6 +37,7 @@ public class DepositPresenter extends BasePresenter<DepositContract.Model, Depos
     @Inject
     AppManager mAppManager;
     int index = 1;
+
     @Inject
     public DepositPresenter(DepositContract.Model model, DepositContract.View rootView) {
         super(model, rootView);
@@ -50,29 +53,30 @@ public class DepositPresenter extends BasePresenter<DepositContract.Model, Depos
     }
 
     public void setList(boolean isPullRefresh) {
-
         if (isPullRefresh) index = 1;
-        mModel.getDepositReport(index,10,"tradedatetime","desc")
-                .compose(RxUtils2.applySchedulers(mRootView,isPullRefresh))
+        String deviceID = (String) SpUtils.get(mApplication, AppConstant.Receipt.NO, "1");
+        mModel.getDepositReport(index, 10, deviceID)
+                .compose(RxUtils2.applySchedulers(mRootView, isPullRefresh))
                 .subscribe(new Observer<BaseResponse<DepositTo>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
-                    @Override public void onNext(BaseResponse<DepositTo> depositToBaseResponse) {
+                    @Override
+                    public void onNext(BaseResponse<DepositTo> depositToBaseResponse) {
 
-                            if (depositToBaseResponse.getStatusCode()!=200){
-                                mRootView.showMessage(depositToBaseResponse.getMessage());
-                                Log.e(TAG, "onNext: "+depositToBaseResponse.getMessage() );
+                        if (depositToBaseResponse.getStatusCode() != 200) {
+                            mRootView.showMessage(depositToBaseResponse.getMessage());
+                            Log.e(TAG, "onNext: " + depositToBaseResponse.getMessage());
 
-                            }else {
-                                if(depositToBaseResponse.isSuccess()){
-                                if (depositToBaseResponse.getContent() != null){
-                                    if(index==1&&depositToBaseResponse.getContent().getRows()==null){
+                        } else {
+                            if (depositToBaseResponse.isSuccess()) {
+                                if (depositToBaseResponse.getContent() != null) {
+                                    if (index == 1 && depositToBaseResponse.getContent().getRows() == null) {
                                         mRootView.noData();
                                     }
-                                    if(depositToBaseResponse.getContent().getRows()!=null){
+                                    if (depositToBaseResponse.getContent().getRows() != null) {
                                         mRootView.setData(depositToBaseResponse.getContent().getRows(), isPullRefresh);
                                         index++;
                                     }
@@ -84,7 +88,7 @@ public class DepositPresenter extends BasePresenter<DepositContract.Model, Depos
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: "+e );
+                        Log.e(TAG, "onError: " + e);
                     }
 
                     @Override

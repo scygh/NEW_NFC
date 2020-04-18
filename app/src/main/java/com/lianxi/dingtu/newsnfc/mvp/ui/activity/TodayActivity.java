@@ -2,10 +2,14 @@ package com.lianxi.dingtu.newsnfc.mvp.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,6 +21,7 @@ import com.lianxi.dingtu.newsnfc.app.event.ReplyEvent;
 import com.lianxi.dingtu.newsnfc.di.component.DaggerTodayComponent;
 import com.lianxi.dingtu.newsnfc.di.module.TodayModule;
 import com.lianxi.dingtu.newsnfc.mvp.contract.TodayContract;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.MachineAmountTo;
 import com.lianxi.dingtu.newsnfc.mvp.presenter.TodayPresenter;
 
 import org.simple.eventbus.Subscriber;
@@ -29,13 +34,30 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 public class TodayActivity extends BaseActivity<TodayPresenter> implements TodayContract.View {
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.loading) ConstraintLayout loading;
-    @BindView(R.id.content) ConstraintLayout content;
-    @BindView(R.id.today) TextView today;
-    @BindView(R.id.yesterday) TextView yesterday;
-    @BindView(R.id.this_month) TextView thisMonth;
-    @BindView(R.id.last_month) TextView lastMonth;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.loading)
+    LinearLayout loading;
+    @BindView(R.id.today)
+    TextView today;
+    @BindView(R.id.yesterday)
+    TextView yesterday;
+    @BindView(R.id.this_month)
+    TextView thisMonth;
+    @BindView(R.id.last_month)
+    TextView lastMonth;
+    @BindView(R.id.time_today)
+    TextView time_today;
+    @BindView(R.id.time_yesterday)
+    TextView time_yesterday;
+    @BindView(R.id.time_this_month)
+    TextView time_thisMonth;
+    @BindView(R.id.time_last_month)
+    TextView time_lastMonth;
+    @BindView(R.id.pay_count)
+    TextView pay_count;
+    @BindView(R.id.time_pay_count)
+    TextView time_pay_count;
     int flag = 0;
 
     @Override
@@ -56,10 +78,8 @@ public class TodayActivity extends BaseActivity<TodayPresenter> implements Today
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         this.setTitle("当前收益");
-        mPresenter.setToday();
-        mPresenter.setYesterday();
-        mPresenter.setThisMonth();
-        mPresenter.setLastMonth();
+        mPresenter.getMachineAmount();
+        mPresenter.getMachineTimeCount();
     }
 
     @Override
@@ -89,33 +109,53 @@ public class TodayActivity extends BaseActivity<TodayPresenter> implements Today
         finish();
     }
 
-    @Override public void onToday(double cost) {
-        Timber.wtf("时间onToday    " + cost);
-        today.setText(String.format("%.2f", cost));
-    }
-
-    @Override public void onThisMonth(double cost) {
-        Timber.wtf("时间onThisMonth" + cost);
-        thisMonth.setText(String.format("当月消费：%.2f", cost));
-    }
-
-    @Override public void onYesterday(double cost) {
-        Timber.wtf("时间onYesterday" + cost);
-        yesterday.setText(String.format("%.2f", cost));
-    }
-
-    @Override public void onLastMonth(double cost) {
-        Timber.wtf("时间onLastMonth" + cost);
-        lastMonth.setText(String.format("上月消费：%.2f", cost));
-    }
-
     @Subscriber
     private void onReplyEvent(ReplyEvent event) {
         flag += event.hasDone;
-        if(flag == 4 ){
+        if(flag == 2){
             loading.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
+
         }
     }
+
+    @Override
+    public void MachineAmount(MachineAmountTo machineAmountTo) {
+        Message msg = handler.obtainMessage(1);
+        msg.obj = machineAmountTo;
+        handler.sendMessage(msg);
+        Log.e(TAG, "MachineAmount: 成功" );
+
+    }
+
+    @Override
+    public void MachineTimeCount(MachineAmountTo machineAmountTo) {
+        Message msg = handler.obtainMessage(2);
+        msg.obj = machineAmountTo;
+        handler.sendMessage(msg);
+        Log.e(TAG, "MachineAmount: 成功" );
+    }
+   Handler handler = new Handler(){
+       @Override
+       public void handleMessage(Message msg) {
+           switch (msg.what){
+               case 1:
+                   MachineAmountTo machineAmountTo = (MachineAmountTo) msg.obj;
+                   today.setText(String.format("%.2f", machineAmountTo.getToday()));
+                   thisMonth.setText(String.format("当月消费：%.2f", machineAmountTo.getCurrentMonth()));
+                   yesterday.setText(String.format("%.2f", machineAmountTo.getLastDay()));
+                   lastMonth.setText(String.format("上月消费：%.2f", machineAmountTo.getLastMonth()));
+                   pay_count.setText("今日刷卡次数："+ machineAmountTo.getToDayCount());
+                   break;
+               case 2:
+                   MachineAmountTo machineAmountTo2 = (MachineAmountTo) msg.obj;
+                   time_today.setText(String.format("%.2f", machineAmountTo2.getToday()));
+                   time_thisMonth.setText(String.format("当月消费：%.2f", machineAmountTo2.getCurrentMonth()));
+                   time_yesterday.setText(String.format("%.2f", machineAmountTo2.getLastDay()));
+                   time_lastMonth.setText(String.format("上月消费：%.2f", machineAmountTo2.getLastMonth()));
+                   time_pay_count.setText("今天刷卡次数："+ machineAmountTo2.getToDayCount());
+                   break;
+           }
+       }
+   };
 }

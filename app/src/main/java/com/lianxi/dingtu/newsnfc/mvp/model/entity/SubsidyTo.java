@@ -4,7 +4,7 @@ import com.contrarywind.interfaces.IPickerViewData;
 
 import java.io.Serializable;
 
-public class SubsidyTo implements Serializable,IPickerViewData {
+public class SubsidyTo implements Serializable, IPickerViewData {
 
     /**
      * ID : 00000000-0000-0000-0000-000000000001
@@ -16,7 +16,7 @@ public class SubsidyTo implements Serializable,IPickerViewData {
      * Description : 系统默认无补贴
      */
 
-    private String ID;
+    private String Id;
     private int Leve;
     private String Name;
     private double Amount;
@@ -24,12 +24,12 @@ public class SubsidyTo implements Serializable,IPickerViewData {
     private int State;
     private String Description;
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return Id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        Id = id;
     }
 
     public int getLeve() {
@@ -80,7 +80,8 @@ public class SubsidyTo implements Serializable,IPickerViewData {
         this.Description = Description;
     }
 
-    @Override public String getPickerViewText() {
+    @Override
+    public String getPickerViewText() {
         return Name;
     }
 }

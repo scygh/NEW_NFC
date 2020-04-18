@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.jess.arms.base.BaseActivity;
@@ -164,6 +165,7 @@ public class DepositActivity extends BaseActivity<DepositPresenter> implements D
 
     @Override public void noData() {
         adapter.setEmptyView(notDataView);
+
     }
 
     @Override public void onRefresh() {

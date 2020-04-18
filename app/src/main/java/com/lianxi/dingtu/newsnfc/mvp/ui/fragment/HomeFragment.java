@@ -34,6 +34,7 @@ import com.lianxi.dingtu.newsnfc.di.module.HomeModule;
 import com.lianxi.dingtu.newsnfc.mvp.contract.HomeContract;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.HomeIndex;
 import com.lianxi.dingtu.newsnfc.mvp.model.entity.Pub_Dictionary_Item;
+import com.lianxi.dingtu.newsnfc.mvp.model.entity.UserInfoTo;
 import com.lianxi.dingtu.newsnfc.mvp.presenter.HomePresenter;
 import com.lianxi.dingtu.newsnfc.mvp.ui.activity.AutoActivity;
 import com.lianxi.dingtu.newsnfc.mvp.ui.activity.CloseActivity;
@@ -72,10 +73,13 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 public class HomeFragment extends BaseFragment<HomePresenter> implements HomeContract.View {
-    @BindView(R.id.company_code) HollowTextView companyCode;
-    @BindView(R.id.account) HollowTextView account;
+    @BindView(R.id.company_code)
+    HollowTextView companyCode;
+    @BindView(R.id.account)
+    HollowTextView account;
     private ArrayList<RelativeLayout> mLayout_List = new ArrayList<>();
-    @BindView(R.id.ll_content) LinearLayout ll_content;
+    @BindView(R.id.ll_content)
+    LinearLayout ll_content;
 
 
     private String name = "";
@@ -111,31 +115,36 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
 //        mPresenter.getToken();
-        account.setText(String.format(" %s", UserInfoHelper.getInstance(getActivity()).getUserInfoTo().getAccount()));
+        UserInfoTo userInfoTo = UserInfoHelper.getInstance(getActivity()).getUserInfoTo();
+        if (userInfoTo != null) {
+            account.setText(String.format(" %s", userInfoTo.getAccount()));
+        }
         companyCode.setText(String.format("单位代码 %s", UserInfoHelper.getInstance(getActivity()).getCode()));
-
+        boolean BLOCK_USER = (boolean) SpUtils.get(getContext(), AppConstant.Api.BLOCK_USER, true);
+        boolean BLOCK_REPORT = (boolean) SpUtils.get(getContext(), AppConstant.Api.BLOCK_REPORT, true);
         addDisposabe(getData(new DisposableObserver<HomeIndex>() {
-            @Override public void onNext(HomeIndex homeIndex) {
+            @Override
+            public void onNext(HomeIndex homeIndex) {
                 List<Pub_Dictionary_Item> items = homeIndex.pub_Dictionary_Item;
                 if (items != null && items.size() > 0)
                     for (Pub_Dictionary_Item item : items) {
+                        if (!BLOCK_USER && item.CHAR1.equals("用户管理")) continue;
+                        if (!BLOCK_REPORT && item.CHAR1.equals("报表中心")) continue;
                         addItem(item);
                     }
             }
 
-            @Override public void onError(Throwable e) {
+            @Override
+            public void onError(Throwable e) {
                 Log.e("TAG", "onError: " + e);
             }
 
-            @Override public void onComplete() {
+            @Override
+            public void onComplete() {
 
             }
         }, HomeIndex.class, "Pub_Dictionary_Item.txt"));
-
-
         initConfig();
-
-
     }
 
 
@@ -275,7 +284,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             image.setImageResource(R.drawable.wkxf);
         } else if (TextUtils.equals("4", item.ITEM_CODE)) {
             image.setImageResource(R.drawable.cprk);
-        }else if (TextUtils.equals("5", item.ITEM_CODE)) {
+        } else if (TextUtils.equals("5", item.ITEM_CODE)) {
             image.setImageResource(R.drawable.icon_kh);
         } else if (TextUtils.equals("6", item.ITEM_CODE)) {
             image.setImageResource(R.drawable.icon_cz);
